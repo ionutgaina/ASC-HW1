@@ -2,14 +2,6 @@ from queue import Queue
 from threading import Thread, Event
 import time
 
-# * creați un nr de threaduri (pool-ul)
-# * threadurile partajează obiectele de sincronizare și notificare, plus o structură de date prin care își partajează joburile pe care le au de prelucrat
-# * fiecare thread, într-un loop infinit verifică dacă există un job în pending (în structura aia de mai sus)
-# - dacă da, procesează jobul și salvează rezultatul
-# - dacă nu, așteaptă până este ceva disponibil
-# - rinse & repeat
-# * la un moment dat, o să vină un shutdown care va notifica threadurile că trebuie să termine execuția
-
 class ThreadPool:
     def __init__(self):
         # You must implement a ThreadPool of TaskRunners
