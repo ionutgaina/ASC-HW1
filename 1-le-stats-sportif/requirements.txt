@@ -1,4 +1,0 @@
-pandas
-flask
-requests
-deepdiff
