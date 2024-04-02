@@ -43,8 +43,6 @@ class TaskRunner(Thread):
             
             result = task.execute()
             
-            # create a folder results if it doesn't exist
-                
             with open(f"results/job_{task.job_id}.txt", "w") as f:
                 f.write(result)
             
