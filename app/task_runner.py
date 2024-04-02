@@ -20,8 +20,8 @@ class ThreadPool:
         self.task_queue = Queue()
         self.threads = [TaskRunner(self.task_queue) for _ in range(self.nr_threads)]
         self.tasks = []
-        
-        self.add_task(lambda: "Hello, World!")
+        if not os.path.exists("results"):
+            os.makedirs("results")
         
     def add_task(self, task_func):
         task = Task(len(self.tasks) + 1, task_func)
@@ -42,11 +42,8 @@ class TaskRunner(Thread):
             task = self.task_queue.get()
             
             result = task.execute()
-            cwd = os.getcwd()
             
             # create a folder results if it doesn't exist
-            if not os.path.exists("results"):
-                os.makedirs("results")
                 
             with open(f"results/job_{task.job_id}.txt", "w") as f:
                 f.write(result)
@@ -56,12 +53,9 @@ class Task():
         self.job_id = job_id
         self.func = func
         self.status = "pending"
-        print(f"Task {self.job_id} created")
         
     def execute(self):
-        print(f"Task {self.job_id} started")
         self.status = "running"
         result = self.func()
         self.status = "done"
-        print(f"Task {self.job_id} done")
         return result
