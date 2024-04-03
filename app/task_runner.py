@@ -47,13 +47,13 @@ class TaskRunner(Thread):
                 f.write(result)
             
 class Task():
-    def __init__(self, job_id, func):
+    def __init__(self, job_id, func, *args):
         self.job_id = job_id
         self.func = func
-        self.status = "pending"
+        self.args = args
+        self.status = "running"
         
     def execute(self):
-        self.status = "running"
-        result = self.func()
+        result = self.func(*self.args)
         self.status = "done"
         return result

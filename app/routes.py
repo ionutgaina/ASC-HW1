@@ -34,9 +34,25 @@ def get_response(job_id):
     #        'status': 'done',
     #        'data': res
     #    })
+    
+    if os.path.exists(f"results/job_{job_id}.txt"):
+        with open(f"results/job_{job_id}.txt", "r") as f:
+            res = f.read()
+            return jsonify({
+                'status': 'done',
+                'data': res
+            })
+    
+    if webserver.tasks_runner.tasks[int(job_id) - 1] is not None:
+        return jsonify({
+            'status': 'running'
+        })
+    
+    return jsonify({
+        'status': 'error',
+        'reason': 'Invalid job_id'
+    })
 
-    # If not, return running status
-    return jsonify({'status': 'NotImplemented'})
 
 @webserver.route('/api/states_mean', methods=['POST'])
 def states_mean_request():
