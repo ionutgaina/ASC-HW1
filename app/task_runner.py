@@ -23,10 +23,12 @@ class ThreadPool:
         if not os.path.exists("results"):
             os.makedirs("results")
         
-    def add_task(self, task_func):
-        task = Task(len(self.tasks) + 1, task_func)
+    def add_task(self, task_func, *args):
+        task_id = len(self.tasks) + 1
+        task = Task(task_id, task_func, *args)
         self.tasks.append(task)
         self.task_queue.put(task)
+        return task_id
 
 class TaskRunner(Thread):
     def __init__(self, task_queue):
@@ -43,8 +45,10 @@ class TaskRunner(Thread):
             
             result = task.execute()
             
-            with open(f"results/job_{task.job_id}.txt", "w") as f:
+            with open(f"results/job_{task.job_id}.json", "w") as f:
                 f.write(result)
+                
+            task.task_done()
             
 class Task():
     def __init__(self, job_id, func, *args):
@@ -55,5 +59,7 @@ class Task():
         
     def execute(self):
         result = self.func(*self.args)
-        self.status = "done"
         return result
+    
+    def task_done(self):
+        self.status = "done"

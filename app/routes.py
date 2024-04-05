@@ -35,37 +35,36 @@ def get_response(job_id):
     #        'data': res
     #    })
     
-    if os.path.exists(f"results/job_{job_id}.txt"):
-        with open(f"results/job_{job_id}.txt", "r") as f:
-            res = f.read()
-            return jsonify({
-                'status': 'done',
-                'data': res
-            })
+    job_id = int(job_id)
+    task = webserver.tasks_runner.tasks[job_id - 1]
     
-    if webserver.tasks_runner.tasks[int(job_id) - 1] is not None:
+    if task is None:
+        return jsonify({
+            'status': 'error',
+            'reason': 'Invalid job_id'
+        })
+        
+    if task.status == "running":
         return jsonify({
             'status': 'running'
         })
-    
+            
+    with open(f"results/job_{job_id}.json", "r") as f:
+        result = json.load(f)
+        
     return jsonify({
-        'status': 'error',
-        'reason': 'Invalid job_id'
+        'status': 'done',
+        'data': result
     })
 
 
 @webserver.route('/api/states_mean', methods=['POST'])
 def states_mean_request():
-    # Get request data
     data = request.json
     print(f"Got request {data}")
-
-    # TODO
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
-
-    return jsonify({"status": "NotImplemented"})
+    
+    job_id = webserver.tasks_runner.add_task(webserver.task_service.states_mean, data['question'])
+    return jsonify({"job_id": job_id})
 
 @webserver.route('/api/state_mean', methods=['POST'])
 def state_mean_request():
@@ -109,14 +108,12 @@ def global_mean_request():
     return jsonify({"status": "NotImplemented"})
 
 @webserver.route('/api/diff_from_mean', methods=['POST'])
-def diff_from_mean_request():
-    # TODO
-    # Get request data
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
-
-    return jsonify({"status": "NotImplemented"})
+def diff_from_mean_request(): 
+    data = request.json
+    print(f"Got request {data}")
+    
+    job_id = webserver.tasks_runner.add_task(webserver.task_service.diff_from_mean, data['question'])
+    return jsonify({"job_id": job_id})
 
 @webserver.route('/api/state_diff_from_mean', methods=['POST'])
 def state_diff_from_mean_request():
