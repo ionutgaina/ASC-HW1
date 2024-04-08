@@ -1,7 +1,10 @@
+from flask import jsonify
+
 class TaskService:
     
-    def __init__(self, data_ingestor):
+    def __init__(self, data_ingestor, app=None):
         self.data_ingestor = data_ingestor
+        self.app = app
         
     def question_data(self, question):
         data = self.data_ingestor.data
@@ -73,3 +76,19 @@ class TaskService:
                 .mean()
                 
         return (mean - data).to_json()
+    
+    def mean_by_category(self, question):  
+        data = self.question_data(question)
+        
+        return data.groupby(['LocationDesc', 'StratificationCategory1', 'Stratification1'])['Data_Value']\
+            .mean()\
+                .to_json()
+                
+    def state_mean_by_category(self, question, state):
+        data = self.question_data(question)
+
+        data = data[data['LocationDesc'] == state]\
+            .groupby(['StratificationCategory1', 'Stratification1'])['Data_Value']\
+                .mean()
+                
+        return data.to_json()
