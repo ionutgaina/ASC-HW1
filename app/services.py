@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, json
 
 class TaskService:
     
@@ -89,6 +89,7 @@ class TaskService:
 
         data = data[data['LocationDesc'] == state]\
             .groupby(['StratificationCategory1', 'Stratification1'])['Data_Value']\
-                .mean()
-                
-        return data.to_json()
+                .mean()\
+                    .to_json()
+        with self.app.app_context():
+            return json.dumps({state : json.loads(data)})

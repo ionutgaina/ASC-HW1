@@ -56,6 +56,10 @@ def states_mean_request():
     print(f"Got request {data}")
     
     job_id = webserver.tasks_runner.add_task(webserver.task_service.states_mean, data['question'])
+    
+    if job_id is None:
+        return jsonify({"error": "Server is shutting down"}), 503
+    
     return jsonify({"job_id": job_id})
 
 @webserver.route('/api/state_mean', methods=['POST'])
@@ -64,6 +68,10 @@ def state_mean_request():
     print(f"Got request {data}")
     
     job_id = webserver.tasks_runner.add_task(webserver.task_service.state_mean, data['question'], data['state'])
+    
+    if job_id is None:
+        return jsonify({"error": "Server is shutting down"}), 503
+    
     return jsonify({"job_id": job_id})
 
 
@@ -73,6 +81,9 @@ def best5_request():
     print(f"Got request {data}")
     
     job_id = webserver.tasks_runner.add_task(webserver.task_service.best5, data['question'])
+    
+    if job_id is None:
+        return jsonify({"error": "Server is shutting down"}), 503
     return jsonify({"job_id": job_id})
 
 @webserver.route('/api/worst5', methods=['POST'])
@@ -81,6 +92,10 @@ def worst5_request():
     print(f"Got request {data}")
     
     job_id = webserver.tasks_runner.add_task(webserver.task_service.worst5, data['question'])
+    
+    if job_id is None:
+        return jsonify({"error": "Server is shutting down"}), 503
+    
     return jsonify({"job_id": job_id})
 
 @webserver.route('/api/global_mean', methods=['POST'])
@@ -89,6 +104,10 @@ def global_mean_request():
     print(f"Got request {data}")
     
     job_id = webserver.tasks_runner.add_task(webserver.task_service.global_mean, data['question'])
+    
+    if job_id is None:
+        return jsonify({"error": "Server is shutting down"}), 503
+    
     return jsonify({"job_id": job_id})
 
 @webserver.route('/api/diff_from_mean', methods=['POST'])
@@ -97,6 +116,10 @@ def diff_from_mean_request():
     print(f"Got request {data}")
     
     job_id = webserver.tasks_runner.add_task(webserver.task_service.diff_from_mean, data['question'])
+
+    if job_id is None:
+        return jsonify({"error": "Server is shutting down"}), 503
+    
     return jsonify({"job_id": job_id})
 
 @webserver.route('/api/state_diff_from_mean', methods=['POST'])
@@ -105,6 +128,10 @@ def state_diff_from_mean_request():
     print(f"Got request {data}")
     
     job_id = webserver.tasks_runner.add_task(webserver.task_service.state_diff_from_mean, data['question'], data['state'])
+
+    if job_id is None:
+        return jsonify({"error": "Server is shutting down"}), 503
+    
     return jsonify({"job_id": job_id})
 
 @webserver.route('/api/mean_by_category', methods=['POST'])
@@ -113,6 +140,10 @@ def mean_by_category_request():
     print(f"Got request {data}")
     
     job_id = webserver.tasks_runner.add_task(webserver.task_service.mean_by_category, data['question'])
+    
+    if job_id is None:
+        return jsonify({"error": "Server is shutting down"}), 503
+    
     return jsonify({"job_id": job_id})
 
 @webserver.route('/api/state_mean_by_category', methods=['POST'])
@@ -121,7 +152,19 @@ def state_mean_by_category_request():
     print(f"Got request {data}")
     
     job_id = webserver.tasks_runner.add_task(webserver.task_service.state_mean_by_category, data['question'], data['state'])
+    
+    if job_id is None:
+        return jsonify({"error": "Server is shutting down"}), 503
+    
     return jsonify({"job_id": job_id})
+
+@webserver.route('/api/graceful_shutdown', methods=['POST'])
+def shutdown_gracefully():
+    print("Shutting down gracefully")
+    
+    webserver.shutdown = True
+    
+    return jsonify({"message": "OK"}), 200
 
 # You can check localhost in your browser to see what this displays
 @webserver.route('/')

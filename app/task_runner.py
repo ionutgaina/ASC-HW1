@@ -6,7 +6,7 @@ import os
 from flask import Response, json
 
 class ThreadPool:
-    def __init__(self):
+    def __init__(self, app=None):
         # You must implement a ThreadPool of TaskRunners
         # Your ThreadPool should check if an environment variable TP_NUM_OF_THREADS is defined
         # If the env var is defined, that is the number of threads to be used by the thread pool
@@ -22,10 +22,14 @@ class ThreadPool:
         self.task_queue = Queue()
         self.threads = [TaskRunner(self.task_queue) for _ in range(self.nr_threads)]
         self.tasks = []
+        self.app = app
         if not os.path.exists("results"):
             os.makedirs("results")
         
     def add_task(self, task_func, *args):
+        if self.app.shutdown:
+            return None
+        
         task_id = len(self.tasks) + 1
         task = Task(task_id, task_func, *args)
         self.tasks.append(task)

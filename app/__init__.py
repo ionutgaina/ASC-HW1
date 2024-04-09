@@ -4,10 +4,12 @@ from app.task_runner import ThreadPool
 from app.services import TaskService
 
 webserver = Flask(__name__)
-webserver.tasks_runner = ThreadPool()
+webserver.tasks_runner = ThreadPool(webserver)
 
 webserver.data_ingestor = DataIngestor("./nutrition_activity_obesity_usa_subset.csv")
 
 webserver.task_service = TaskService(webserver.data_ingestor, webserver)
+
+webserver.shutdown = False
 
 from app import routes
