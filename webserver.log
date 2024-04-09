@@ -1,6 +1,0 @@
-Method question_data returned: Percent of adults who achieve at least 300 minutes a week of moderate-intensity aerobic physical activity or 150 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)
-Entered method is_best with parameter Percent of adults who achieve at least 300 minutes a week of moderate-intensity aerobic physical activity or 150 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)
-Method is_best returned True
-Method worst5 returned: {"Puerto Rico":17.875,"Mississippi":23.8322580645,"Texas":25.1086956522,"Oklahoma":25.1714285714,"Alabama":26.4136363636}
-Received a GET request to /api/get_results/114
-Sending response for GET request to /api/get_results/114: {'status': 'done', 'data': {'Puerto Rico': 17.875, 'Mississippi': 23.8322580645, 'Texas': 25.1086956522, 'Oklahoma': 25.1714285714, 'Alabama': 26.4136363636}}
