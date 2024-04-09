@@ -17,9 +17,8 @@ def post_endpoint():
 
         response = {"message": "Received data successfully", "data": data}
 
-        return jsonify(response)
-    else:
-        return jsonify({"error": "Method not allowed"}), 405
+        return jsonify(response), 200
+    return jsonify({"error": "Method not allowed"}), 405
 
 
 @webserver.route('/api/get_results/<job_id>', methods=['GET'])
@@ -42,7 +41,7 @@ def get_response(job_id):
     if task.status == "running":
         return jsonify({'status': 'running'})
 
-    with open(f"results/job_{job_id}.json", "r") as f:
+    with open(f"results/job_{job_id}.json", "r", encoding="utf-8") as f:
         result = json.load(f)
 
     return jsonify({'status': 'done', 'data': result})
@@ -67,12 +66,14 @@ def states_mean_request():
 @webserver.route('/api/state_mean', methods=['POST'])
 def state_mean_request():
     """
-    A POST endpoint that receives a question and a state and returns the mean of the data values for that state.
+    A POST endpoint that receives a question and a state and 
+    returns the mean of the data values for that state.
     """
     data = request.json
     print(f"Got request {data}")
 
-    job_id = webserver.tasks_runner.add_task(webserver.task_service.state_mean, data['question'], data['state'])
+    job_id = webserver.tasks_runner\
+        .add_task(webserver.task_service.state_mean, data['question'], data['state'])
 
     if job_id is None:
         return jsonify({"error": "Server is shutting down"}), 503
@@ -130,12 +131,14 @@ def global_mean_request():
 @webserver.route('/api/diff_from_mean', methods=['POST'])
 def diff_from_mean_request():
     """
-    A POST endpoint that receives a question and returns the difference of the data values from the mean.
+    A POST endpoint that receives a question and
+    returns the difference of the data values from the mean.
     """
     data = request.json
     print(f"Got request {data}")
 
-    job_id = webserver.tasks_runner.add_task(webserver.task_service.diff_from_mean, data['question'])
+    job_id = webserver.tasks_runner\
+        .add_task(webserver.task_service.diff_from_mean, data['question'])
 
     if job_id is None:
         return jsonify({"error": "Server is shutting down"}), 503
@@ -146,12 +149,14 @@ def diff_from_mean_request():
 @webserver.route('/api/state_diff_from_mean', methods=['POST'])
 def state_diff_from_mean_request():
     """
-    A POST endpoint that receives a question and a state and returns the difference of the data values from the mean for that state.
+    A POST endpoint that receives a question and a state and 
+    returns the difference of the data values from the mean for that state.
     """
     data = request.json
     print(f"Got request {data}")
 
-    job_id = webserver.tasks_runner.add_task(webserver.task_service.state_diff_from_mean, data['question'], data['state'])
+    job_id = webserver.tasks_runner\
+        .add_task(webserver.task_service.state_diff_from_mean, data['question'], data['state'])
 
     if job_id is None:
         return jsonify({"error": "Server is shutting down"}), 503
@@ -162,12 +167,14 @@ def state_diff_from_mean_request():
 @webserver.route('/api/mean_by_category', methods=['POST'])
 def mean_by_category_request():
     """
-    A POST endpoint that receives a question and returns the mean of the data values for each category.
+    A POST endpoint that receives a question and 
+    returns the mean of the data values for each category.
     """
     data = request.json
     print(f"Got request {data}")
 
-    job_id = webserver.tasks_runner.add_task(webserver.task_service.mean_by_category, data['question'])
+    job_id = webserver.tasks_runner\
+        .add_task(webserver.task_service.mean_by_category, data['question'])
 
     if job_id is None:
         return jsonify({"error": "Server is shutting down"}), 503
@@ -178,12 +185,14 @@ def mean_by_category_request():
 @webserver.route('/api/state_mean_by_category', methods=['POST'])
 def state_mean_by_category_request():
     """
-    A POST endpoint that receives a question and a state and returns the mean of the data values for each category for that state.
+    A POST endpoint that receives a question and a state and 
+    returns the mean of the data values for each category for that state.
     """
     data = request.json
     print(f"Got request {data}")
 
-    job_id = webserver.tasks_runner.add_task(webserver.task_service.state_mean_by_category, data['question'], data['state'])
+    job_id = webserver.tasks_runner\
+        .add_task(webserver.task_service.state_mean_by_category, data['question'], data['state'])
 
     if job_id is None:
         return jsonify({"error": "Server is shutting down"}), 503
@@ -223,17 +232,15 @@ def num_jobs():
 @webserver.route('/index')
 def index():
     """
-    A GET endpoint that returns a welcome message and the defined routes.
+    A GET endpoint that returns the defined routes.
     """
     routes = get_defined_routes()
-    msg = f"Hello, World!\n Interact with the webserver using one of the defined routes:\n"
 
-    paragraphs = ""
+    paragraphs = []
     for route in routes:
-        paragraphs += f"<p>{route}</p>"
+        paragraphs.append(f"<p>{route}</p>")
 
-    msg += paragraphs
-    return msg
+    return "".join(paragraphs)
 
 
 def get_defined_routes():
