@@ -54,10 +54,8 @@ class TaskService:
                             
     def global_mean(self, question):
         data = self.question_data(question)
-        return data['Data_Value'].mean()\
-            .groupby('LocationDesc')['Data_Value']\
-                .mean()\
-                    .to_json()
+        mean_value = data['Data_Value'].mean().item()
+        return json.dumps({"global_mean": mean_value})
     
         
     def diff_from_mean(self, question):
