@@ -162,7 +162,7 @@ def state_mean_by_category_request():
 def shutdown_gracefully():
     print("Shutting down gracefully")
     
-    webserver.shutdown = True
+    webserver.tasks_runner.shutdown()
     
     return jsonify({"message": "OK"}), 200
 

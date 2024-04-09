@@ -1,4 +1,4 @@
-from flask import jsonify, json
+from flask import json
 
 class TaskService:
     

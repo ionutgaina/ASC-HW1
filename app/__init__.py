@@ -4,7 +4,7 @@ from app.task_runner import ThreadPool
 from app.services import TaskService
 
 webserver = Flask(__name__)
-webserver.tasks_runner = ThreadPool(webserver)
+webserver.tasks_runner = ThreadPool()
 
 webserver.data_ingestor = DataIngestor("./nutrition_activity_obesity_usa_subset.csv")
 
