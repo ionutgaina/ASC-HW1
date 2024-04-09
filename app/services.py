@@ -91,3 +91,15 @@ class TaskService:
                     .to_json()
         with self.app.app_context():
             return json.dumps({state : json.loads(data)})
+        
+    
+    def jobs(self):
+        result = []
+        for task in self.app.tasks_runner.get_tasks():
+            result.append({"job_id_" + str(task.job_id): task.status})
+            
+        with self.app.app_context():
+            return result
+        
+    def num_jobs(self):
+        return len(self.app.tasks_runner.get_tasks())

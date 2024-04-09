@@ -6,7 +6,7 @@ import os
 class ThreadPool:
     """A ThreadPool class to manage TaskRunners"""
 
-    def __init__(self):
+    def __init__(self, app=None):
         """
         Initialize the ThreadPool.
 
@@ -21,37 +21,40 @@ class ThreadPool:
         """
         self.nr_threads = int(os.environ.get('TP_NUM_THREADS', os.cpu_count()))
         self.task_queue = Queue()
-        self.threads = [TaskRunner(self.task_queue) for _ in range(self.nr_threads)]
+        self.threads = [TaskRunner(self.task_queue, app) for _ in range(self.nr_threads)]
         self.tasks = []
-        self.shutdown_app = False
+        self.app = app
         if not os.path.exists("results"):
             os.makedirs("results")
 
     def add_task(self, task_func, *args):
         """Add a task to the thread pool."""
-        if self.shutdown_app:
+        if self.app.shutdown:
             return None
         task_id = len(self.tasks) + 1
         task = Task(task_id, task_func, *args)
         self.tasks.append(task)
         self.task_queue.put(task)
         return task_id
-    def shutdown(self):
-        """Shutdown the ThreadPool."""
-        self.shutdown_app = True
+    def get_tasks(self):
+        """Get all tasks in the thread pool."""
+        return self.tasks
 
 class TaskRunner(Thread):
     """A TaskRunner class to execute tasks."""
 
-    def __init__(self, task_queue):
+    def __init__(self, task_queue, app=None):
         """Initialize TaskRunner with a task queue."""
         super().__init__()
         self.task_queue = task_queue
+        self.app = app
         self.start()
 
     def run(self):
         """Run the TaskRunner."""
         while True:
+            if self.task_queue.empty() and self.app.shutdown:
+                break
             task = self.task_queue.get()
             result = task.execute()
             with open(f"results/job_{task.job_id}.json", "w", encoding="utf-8") as f:
