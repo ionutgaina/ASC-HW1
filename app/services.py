@@ -7,15 +7,15 @@ class TaskService:
         self.app = app
         
     def question_data(self, question):
-        data = self.data_ingestor.data
+        data = self.data_ingestor.get_data()
         data = data[data['Question'] == question]
         
         return data
     
     def is_best(self, question):
-        if self.data_ingestor.questions_best_is_min.count(question):
+        if self.data_ingestor.get_questions_best_is_min().count(question):
             return False
-        elif self.data_ingestor.questions_best_is_max.count(question):
+        elif self.data_ingestor.get_questions_best_is_max().count(question):
             return True
         else:
             raise ValueError('Question not found')

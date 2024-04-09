@@ -1,8 +1,15 @@
-import os
-import json
+"""
+This module is responsible for reading the data from the csv file and storing it
+
+It also contains the questions that are best when the value is minimum and 
+the questions that are best when the value is maximum.
+"""
 import pandas as pd
 
 class DataIngestor:
+    """
+    A class that reads the data from the csv file and stores it
+    """
     def __init__(self, csv_path: str):
         self.data = pd.read_csv(csv_path)
 
@@ -15,8 +22,34 @@ class DataIngestor:
         ]
 
         self.questions_best_is_max = [
-            'Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)',
-            'Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic physical activity and engage in muscle-strengthening activities on 2 or more days a week',
-            'Percent of adults who achieve at least 300 minutes a week of moderate-intensity aerobic physical activity or 150 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)',
-            'Percent of adults who engage in muscle-strengthening activities on 2 or more days a week',
+            'Percent of adults who achieve at least 150 minutes a week of ' +
+            'moderate-intensity aerobic physical activity or 75 minutes a ' +
+            'week of vigorous-intensity aerobic activity (or an equivalent combination)',
+            'Percent of adults who achieve at least 150 minutes a week of moderate-intensity ' +
+            'aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic ' +
+            'physical activity and engage in muscle-strengthening activities on 2 or more ' +
+            'days a week',
+            'Percent of adults who achieve at least 300 minutes a week of moderate-intensity ' +
+            'aerobic physical activity or 150 minutes a week of vigorous-intensity aerobic ' +
+            'activity (or an equivalent combination)',
+            'Percent of adults who engage in muscle-strengthening activities on 2 or more ' +
+            'days a week',
         ]
+
+    def get_data(self):
+        """
+        Get the data read from the csv file.
+        """
+        return self.data
+
+    def get_questions_best_is_min(self):
+        """
+        Get the questions that are best when the value is minimum.
+        """
+        return self.questions_best_is_min
+
+    def get_questions_best_is_max(self):
+        """
+        Get the questions that are best when the value is maximum.
+        """
+        return self.questions_best_is_max
