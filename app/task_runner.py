@@ -29,6 +29,7 @@ class ThreadPool:
 
     def add_task(self, task_func, *args):
         """Add a task to the thread pool."""
+        self.app.logger.info(f"Adding task {task_func.__name__} to ThreadPool")
         if self.app.shutdown:
             return None
         task_id = len(self.tasks) + 1
@@ -42,6 +43,7 @@ class ThreadPool:
 
     def shutdown(self):
         """Shutdown the ThreadPool."""
+        self.app.logger.info("Shutting down ThreadPool")
         self.app.shutdown = True
         for thread in self.threads:
             thread.join()
@@ -60,11 +62,12 @@ class TaskRunner(Thread):
     def run(self):
         """Run the TaskRunner."""
         while True:
-            self.app.logger.info("TaskRunner running")
             if self.task_queue.empty() and self.app.shutdown:
+                self.app.logger.info("Shutting down thread")
                 break
             try :
                 task = self.task_queue.get(block=False)
+                self.app.logger.info(f"Executing task {task.func.__name__}")
             except Empty:
                 continue
             result = task.execute()
