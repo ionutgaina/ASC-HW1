@@ -2,6 +2,7 @@
 This is the main file of the application. It initializes the Flask webserver and the services
 """
 import logging
+import logging.handlers
 import time
 from logging.handlers import RotatingFileHandler
 from flask import Flask
@@ -12,14 +13,19 @@ from app.services import TaskService
 webserver = Flask(__name__)
 
 webserver.logger = logging.getLogger(__name__)
+webserver.logger.setLevel(logging.DEBUG)
+handler = logging.handlers.RotatingFileHandler('webserver.log', maxBytes=10000, backupCount=10)
 
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s',\
     datefmt='%d-%m-%Y %H:%M:%S')
 formatter.converter = time.gmtime
 
-webserver.logger.addHandler(RotatingFileHandler('webserver.log', maxBytes=10000, backupCount=10)\
-    .setFormatter(formatter))
-webserver.logger.setLevel(logging.DEBUG)
+handler.setFormatter(formatter)
+
+webserver.logger.addHandler(handler)
+
+
+webserver.logger.info("Server started")
 
 webserver.shutdown = False
 

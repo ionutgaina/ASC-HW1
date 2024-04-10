@@ -271,7 +271,7 @@ def shutdown_gracefully():
     """
     webserver.logger.info("Received a GET request to /api/graceful_shutdown")
 
-    webserver.shutdown = True
+    webserver.tasks_runner.shutdown()
     response = {"message": "OK"}
     webserver.logger.info("Sending response for GET request to /api/graceful_shutdown: %s",\
         response)

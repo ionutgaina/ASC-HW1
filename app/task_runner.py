@@ -26,9 +26,6 @@ class ThreadPool:
         self.app = app
         if not os.path.exists("results"):
             os.makedirs("results")
-            
-        for thread in self.threads:
-            thread.join()
 
     def add_task(self, task_func, *args):
         """Add a task to the thread pool."""
@@ -42,6 +39,12 @@ class ThreadPool:
     def get_tasks(self):
         """Get all tasks in the thread pool."""
         return self.tasks
+    
+    def shutdown(self):
+        """Shutdown the ThreadPool."""
+        self.app.shutdown = True
+        for thread in self.threads:
+            thread.join()
 
 class TaskRunner(Thread):
     """A TaskRunner class to execute tasks."""
