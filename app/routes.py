@@ -270,7 +270,6 @@ def shutdown_gracefully():
     A GET endpoint that shuts down the server gracefully.
     """
     webserver.logger.info("Received a GET request to /api/graceful_shutdown")
-
     webserver.tasks_runner.shutdown()
     response = {"message": "OK"}
     webserver.logger.info("Sending response for GET request to /api/graceful_shutdown: %s",\

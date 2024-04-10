@@ -4,7 +4,6 @@ This is the main file of the application. It initializes the Flask webserver and
 import logging
 import logging.handlers
 import time
-from logging.handlers import RotatingFileHandler
 from flask import Flask
 from app.data_ingestor import DataIngestor
 from app.task_runner import ThreadPool
