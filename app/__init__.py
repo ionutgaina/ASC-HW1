@@ -16,6 +16,6 @@ webserver.tasks_runner = ThreadPool(webserver)
 
 webserver.data_ingestor = DataIngestor("./nutrition_activity_obesity_usa_subset.csv")
 
-webserver.task_service = TaskService(webserver.data_ingestor, webserver)
+webserver.task_service = TaskService(webserver.data_ingestor, webserver.logger, webserver.tasks_runner)
 
 from app import routes
