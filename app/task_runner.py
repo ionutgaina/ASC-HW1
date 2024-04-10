@@ -26,6 +26,9 @@ class ThreadPool:
         self.app = app
         if not os.path.exists("results"):
             os.makedirs("results")
+            
+        for thread in self.threads:
+            thread.join()
 
     def add_task(self, task_func, *args):
         """Add a task to the thread pool."""
